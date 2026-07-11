@@ -103,6 +103,7 @@ export function App() {
   const [state, setState] = useState<TimerState>(loadState);
   const [now, setNow] = useState(Date.now());
   const [bellNotice, setBellNotice] = useState<string | null>(null);
+  const [broadcastConnected, setBroadcastConnected] = useState(false);
   const channelRef = useRef<BroadcastChannel | null>(null);
   const broadcastWindowRef = useRef<Window | null>(null);
   const stateRef = useRef(state);
@@ -122,13 +123,31 @@ export function App() {
     channelRef.current = channel;
     channel.onmessage = (event) => {
       if (event.data?.type === "request" && !isBroadcast) channel.postMessage({ type: "state", state: stateRef.current });
-      if (event.data?.type === "bell") { setBellNotice(event.data.label); window.setTimeout(() => setBellNotice(null), 1600); }
+      if (event.data?.type === "broadcast-ready" && !isBroadcast) setBroadcastConnected(true);
+      if (event.data?.type === "broadcast-closed" && !isBroadcast) setBroadcastConnected(false);
+      if (event.data?.type === "bell") {
+        setBellNotice(event.data.label);
+        if (isBroadcast) {
+          const currentSettings = stateRef.current.settings;
+          if (!currentSettings.muted) playBell(currentSettings.volume, Number(event.data.strikeCount) || 1);
+        }
+        window.setTimeout(() => setBellNotice(null), 1600);
+      }
       if (event.data?.type === "state") setState((current) => event.data.state.updatedAt >= current.updatedAt ? event.data.state : current);
     };
-    if (isBroadcast) channel.postMessage({ type: "request" });
+    if (isBroadcast) {
+      channel.postMessage({ type: "request" });
+      channel.postMessage({ type: "broadcast-ready" });
+      void getAudioContext();
+      void loadAudio();
+    }
     const onStorage = (event: StorageEvent) => { if (event.key === STORAGE_KEY && event.newValue) setState(JSON.parse(event.newValue)); };
     window.addEventListener("storage", onStorage);
-    return () => { channel.close(); window.removeEventListener("storage", onStorage); };
+    return () => {
+      if (isBroadcast) channel.postMessage({ type: "broadcast-closed" });
+      channel.close();
+      window.removeEventListener("storage", onStorage);
+    };
   }, [isBroadcast]);
 
   useEffect(() => { const id = window.setInterval(() => setNow(Date.now()), 100); return () => window.clearInterval(id); }, []);
@@ -168,11 +187,13 @@ export function App() {
     if (isBroadcast || runtime.status !== "running") return;
     const due = runtime.activeBells.filter((bell) => bell.enabled && !runtime.firedBellIds.includes(bell.id) && remainingMilliseconds <= bell.triggerRemainingSeconds * 1000);
     if (!due.length) return;
-    if (!settings.muted) due.forEach((bell, index) => window.setTimeout(() => playBell(settings.volume, bell.strikeCount), index * 400));
+    if (!broadcastConnected && !settings.muted) due.forEach((bell, index) => window.setTimeout(() => playBell(settings.volume, bell.strikeCount), index * 400));
     const label = `${runtime.activeBells.findIndex((bell) => bell.id === due[0].id) + 1}鈴`;
-    setBellNotice(label); channelRef.current?.postMessage({ type: "bell", label }); window.setTimeout(() => setBellNotice(null), 1600);
+    setBellNotice(label);
+    due.forEach((bell, index) => window.setTimeout(() => channelRef.current?.postMessage({ type: "bell", label: `${runtime.activeBells.findIndex((item) => item.id === bell.id) + 1}鈴`, strikeCount: bell.strikeCount }), index * 400));
+    window.setTimeout(() => setBellNotice(null), 1600);
     commit((previous) => ({ ...previous, runtime: { ...previous.runtime, firedBellIds: [...previous.runtime.firedBellIds, ...due.map((bell) => bell.id)] } }));
-  }, [commit, isBroadcast, remainingMilliseconds, runtime.activeBells, runtime.firedBellIds, runtime.status, settings.muted, settings.volume]);
+  }, [broadcastConnected, commit, isBroadcast, remainingMilliseconds, runtime.activeBells, runtime.firedBellIds, runtime.status, settings.muted, settings.volume]);
 
   useEffect(() => {
     if (!isBroadcast && runtime.status === "running" && remainingMilliseconds <= 0) {
