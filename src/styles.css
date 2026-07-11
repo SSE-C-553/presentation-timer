@@ -92,8 +92,12 @@ select { min-width: 108px; padding: 0 30px 0 10px; }
 .usageGuide li strong { display: block; font-size: 13px; }
 .usageGuide li span { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.55; }
 .audioCredit { margin: 11px 0 0; color: #7c7f79; font-size: 11px; }
-.authorCredit { margin: 5px 0 0; color: #666963; font-size: 11px; }
+.footerLinks { margin-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.authorCredit { margin: 0; color: #666963; font-size: 11px; }
 .audioCredit a, .authorCredit a { color: inherit; text-underline-offset: 2px; }
+.shareButton { min-height: 34px; padding: 0 11px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid #83857f; border-radius: 2px; color: var(--ink); background: transparent; font-size: 12px; font-weight: 700; text-decoration: none; }
+.shareButton:hover { background: #deddd7; }
+.shareButton svg { width: 15px; height: 15px; flex: none; }
 
 .broadcastShell { width: 100vw; height: 100vh; height: 100dvh; display: grid; place-items: center; overflow: hidden; background: #020304; }
 .broadcastCanvas { position: relative; width: min(100vw, calc(100vh * var(--ratio))); height: min(100vh, calc(100vw / var(--ratio))); padding: clamp(24px, 5vmin, 72px); display: grid; overflow: hidden; background: #070907; }

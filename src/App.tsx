@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bell, Maximize2, Pause, Play, Plus, RotateCcw, Trash2, Volume2, VolumeX } from "lucide-react";
+import { Bell, Maximize2, Pause, Play, Plus, RotateCcw, Share2, Trash2, Volume2, VolumeX } from "lucide-react";
 
 type Status = "idle" | "running" | "paused" | "finished";
 type AspectRatio = "4:3" | "16:9";
@@ -11,6 +11,8 @@ type TimerState = { settings: Settings; runtime: Runtime; revision: number; upda
 const STORAGE_KEY = "presentation-timer-state-v1";
 const CHANNEL_NAME = "lt-timer-sync";
 const BELL_AUDIO_SRC = "./audio/otologic-onoma-ding04-short.mp3";
+const PUBLIC_APP_URL = "https://sse-c-553.github.io/presentation-timer/";
+const X_SHARE_TEXT = "Presentation Timer - Discord配信向けの発表タイマー";
 
 const defaultBells = (): BellEvent[] => [
   { id: crypto.randomUUID(), triggerRemainingSeconds: 300, strikeCount: 1, enabled: true },
@@ -196,6 +198,7 @@ export function App() {
   const updateBell = (id: string, patch: Partial<BellEvent>) => updateSettings({ bells: settings.bells.map((bell) => bell.id === id ? { ...bell, ...patch } : bell) });
   const durationParts = splitTime(settings.durationSeconds);
   const statusLabel = runtime.status === "running" ? "進行中" : runtime.status === "paused" ? "一時停止" : runtime.status === "finished" ? "終了" : "待機中";
+  const xShareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(X_SHARE_TEXT)}&url=${encodeURIComponent(PUBLIC_APP_URL)}`;
 
   const resizeBroadcastWindow = useCallback((target: Window, ratio: AspectRatio) => {
     const ratioValue = ratio === "16:9" ? 16 / 9 : 4 / 3;
@@ -342,7 +345,10 @@ export function App() {
         「オノマトペ チーン04-2（短）」
         (<a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noreferrer">CC BY 4.0</a>)
       </p>
-      <p className="authorCredit">作者: <a href="https://x.com/SSEC553" target="_blank" rel="noreferrer">SSEC553</a></p>
+      <div className="footerLinks">
+        <p className="authorCredit">作者: <a href="https://x.com/SSEC553" target="_blank" rel="noreferrer">SSEC553</a></p>
+        <a className="shareButton" href={xShareUrl} target="_blank" rel="noreferrer"><Share2 />Xで共有</a>
+      </div>
     </section>
   </main>;
 }
