@@ -261,8 +261,12 @@ export function App() {
   }, [isBroadcast, settings.aspectRatio]);
 
   if (isBroadcast) return <main className="broadcastShell"><section className={`broadcastCanvas ratio-${settings.aspectRatio.replace(":", "-")} ${tone}`}>
-    <header><span>全体 {formatTime(displayDuration)}</span><span>{statusLabel}</span></header>
-    <div className="broadcastCenter"><p className="remainingLabel">残り時間</p><div className="broadcastTime">{formatTime(remainingSeconds)}</div><ProgressBar /><p className="elapsed">経過 {formatTime(elapsedSeconds)}</p></div>
+    <div className="broadcastCenter">
+      <span className="broadcastStatus">{statusLabel}</span>
+      <div className="broadcastTime">{formatTime(remainingSeconds)}</div>
+      <p className="broadcastMeta">経過 {formatTime(elapsedSeconds)} / 全体 {formatTime(displayDuration)}</p>
+      <ProgressBar />
+    </div>
     {bellNotice && <div className="bellNotice"><Bell />{bellNotice}</div>}
   </section></main>;
 

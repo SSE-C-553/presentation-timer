@@ -95,15 +95,15 @@ select { min-width: 108px; padding: 0 30px 0 10px; }
 .audioCredit a { color: inherit; text-underline-offset: 2px; }
 
 .broadcastShell { width: 100vw; height: 100vh; height: 100dvh; display: grid; place-items: center; overflow: hidden; background: #020304; }
-.broadcastCanvas { position: relative; width: min(100vw, calc(100vh * var(--ratio))); height: min(100vh, calc(100vw / var(--ratio))); padding: clamp(20px, 4vmin, 60px); display: grid; grid-template-rows: auto 1fr; overflow: hidden; background: #070907; }
+.broadcastCanvas { position: relative; width: min(100vw, calc(100vh * var(--ratio))); height: min(100vh, calc(100vw / var(--ratio))); padding: clamp(24px, 5vmin, 72px); display: grid; overflow: hidden; background: #070907; }
 .ratio-16-9 { --ratio: 1.7777778; }
 .ratio-4-3 { --ratio: 1.3333333; }
-.broadcastCanvas header { display: flex; justify-content: space-between; gap: 20px; color: #b5bab6; font: 600 clamp(13px, 1.8vmin, 22px)/1 ui-monospace, Consolas, monospace; }
 .broadcastCenter { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-.remainingLabel, .elapsed { margin: 0; color: #b5bab6; font-size: clamp(14px, 2vmin, 26px); }
-.broadcastTime { margin: clamp(18px, 3.5vmin, 34px) 0; font: 700 clamp(72px, 14vmin, 180px)/.9 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.ratio-4-3 .broadcastTime { font-size: clamp(72px, 14vmin, 180px); }
-.broadcastCanvas .progress { width: min(82%, 980px); height: clamp(8px, 1.4vmin, 18px); margin-bottom: clamp(16px, 3vmin, 32px); }
+.broadcastStatus { padding: clamp(5px, .8vmin, 9px) clamp(10px, 1.5vmin, 18px); border: 1px solid #555a56; color: #c1c6c2; font-size: clamp(14px, 2vmin, 26px); font-weight: 700; }
+.broadcastTime { margin: clamp(28px, 5vmin, 54px) 0 clamp(18px, 3vmin, 34px); font: 700 clamp(110px, 22vmin, 300px)/.86 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ratio-4-3 .broadcastTime { font-size: clamp(100px, 20vmin, 260px); }
+.broadcastMeta { margin: 0 0 clamp(22px, 4vmin, 44px); color: #aab0ab; font: clamp(16px, 2.4vmin, 32px)/1.4 ui-monospace, Consolas, monospace; }
+.broadcastCanvas .progress { width: min(100%, 1080px); height: clamp(9px, 1.5vmin, 20px); }
 .bellNotice { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 20px; background: rgba(4, 6, 5, .94); color: #fff; font-size: clamp(64px, 14vmin, 180px); font-weight: 800; }
 .bellNotice svg { width: 1em; height: 1em; }
 
