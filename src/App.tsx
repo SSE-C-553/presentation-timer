@@ -187,10 +187,17 @@ export function App() {
   const statusLabel = runtime.status === "running" ? "進行中" : runtime.status === "paused" ? "一時停止" : runtime.status === "finished" ? "終了" : "待機中";
 
   const resizeBroadcastWindow = useCallback((target: Window, ratio: AspectRatio) => {
-    const contentSize = ratio === "16:9" ? { width: 1280, height: 720 } : { width: 1024, height: 768 };
+    const ratioValue = ratio === "16:9" ? 16 / 9 : 4 / 3;
     const frameWidth = Math.max(0, target.outerWidth - target.innerWidth);
     const frameHeight = Math.max(0, target.outerHeight - target.innerHeight);
-    target.resizeTo(contentSize.width + frameWidth, contentSize.height + frameHeight);
+    let contentWidth = target.innerWidth || (ratio === "16:9" ? 1280 : 1024);
+    let contentHeight = contentWidth / ratioValue;
+    const maxHeight = Math.max(320, target.screen.availHeight - frameHeight);
+    if (contentHeight > maxHeight) {
+      contentHeight = maxHeight;
+      contentWidth = contentHeight * ratioValue;
+    }
+    target.resizeTo(Math.round(contentWidth + frameWidth), Math.round(contentHeight + frameHeight));
   }, []);
 
   const openBroadcastWindow = () => {
@@ -198,7 +205,7 @@ export function App() {
     const target = window.open(
       `${window.location.pathname}#broadcast`,
       "lt-timer-broadcast",
-      `popup=yes,width=${size.width},height=${size.height},resizable=no`,
+      `popup=yes,width=${size.width},height=${size.height},resizable=yes`,
     );
     if (!target) return;
     broadcastWindowRef.current = target;
@@ -216,22 +223,32 @@ export function App() {
     if (!isBroadcast) return;
     let resizeTimer: number | null = null;
     let correcting = false;
+    let previousWidth = window.innerWidth;
+    let previousHeight = window.innerHeight;
 
     const enforceBroadcastSize = () => {
       if (correcting) return;
       if (resizeTimer !== null) window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
-        const contentSize = settings.aspectRatio === "16:9"
-          ? { width: 1280, height: 720 }
-          : { width: 1024, height: 768 };
+        const ratioValue = settings.aspectRatio === "16:9" ? 16 / 9 : 4 / 3;
         const frameWidth = Math.max(0, window.outerWidth - window.innerWidth);
         const frameHeight = Math.max(0, window.outerHeight - window.innerHeight);
-        const targetWidth = contentSize.width + frameWidth;
-        const targetHeight = contentSize.height + frameHeight;
+        const widthDelta = Math.abs(window.innerWidth - previousWidth);
+        const heightDelta = Math.abs(window.innerHeight - previousHeight);
+        let contentWidth = window.innerWidth;
+        let contentHeight = window.innerHeight;
+        if (widthDelta >= heightDelta) contentHeight = contentWidth / ratioValue;
+        else contentWidth = contentHeight * ratioValue;
+        const targetWidth = Math.round(contentWidth + frameWidth);
+        const targetHeight = Math.round(contentHeight + frameHeight);
         if (Math.abs(window.outerWidth - targetWidth) <= 2 && Math.abs(window.outerHeight - targetHeight) <= 2) return;
         correcting = true;
         window.resizeTo(targetWidth, targetHeight);
-        window.setTimeout(() => { correcting = false; }, 100);
+        window.setTimeout(() => {
+          previousWidth = window.innerWidth;
+          previousHeight = window.innerHeight;
+          correcting = false;
+        }, 100);
       }, 120);
     };
 
