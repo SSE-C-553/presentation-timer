@@ -98,12 +98,12 @@ select { min-width: 108px; padding: 0 30px 0 10px; }
 .broadcastCanvas { position: relative; width: min(100vw, calc(100vh * var(--ratio))); height: min(100vh, calc(100vw / var(--ratio))); padding: clamp(24px, 5vmin, 72px); display: grid; overflow: hidden; background: #070907; }
 .ratio-16-9 { --ratio: 1.7777778; }
 .ratio-4-3 { --ratio: 1.3333333; }
-.broadcastCenter { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-.broadcastStatus { color: #c1c6c2; font-size: clamp(13px, 2vmin, 24px); font-weight: 700; }
-.broadcastTime { margin: clamp(24px, 4.5vmin, 48px) 0 clamp(14px, 2.5vmin, 28px); font: 700 clamp(118px, 32vmin, 300px)/.82 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.ratio-4-3 .broadcastTime { font-size: clamp(118px, 29vmin, 270px); }
-.broadcastMeta { margin: 0 0 clamp(24px, 5vmin, 50px); color: #aab0ab; font: clamp(13px, 2.2vmin, 28px)/1.4 ui-monospace, Consolas, monospace; }
-.broadcastCanvas .progress { width: min(96%, 1080px); height: clamp(8px, 1.3vmin, 16px); }
+.broadcastCenter { width: 100%; display: grid; grid-template-rows: auto auto auto auto; justify-items: center; align-content: center; text-align: center; }
+.broadcastStatus { margin: 0 0 clamp(24px, 5vmin, 52px); color: #c1c6c2; font-size: clamp(14px, 2.2vmin, 26px); font-weight: 700; }
+.broadcastTime { margin: 0; font: 700 clamp(132px, 38vmin, 360px)/.78 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ratio-4-3 .broadcastTime { font-size: clamp(132px, 34vmin, 320px); }
+.broadcastMeta { margin: clamp(18px, 3.5vmin, 36px) 0 0; color: #aab0ab; font: clamp(14px, 2.3vmin, 30px)/1.4 ui-monospace, Consolas, monospace; }
+.broadcastCanvas .progress { width: min(96%, 1080px); height: clamp(8px, 1.3vmin, 16px); margin-top: clamp(24px, 5vmin, 52px); }
 .bellNotice { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 20px; background: rgba(4, 6, 5, .94); color: #fff; font-size: clamp(64px, 14vmin, 180px); font-weight: 800; }
 .bellNotice svg { width: 1em; height: 1em; }
 
