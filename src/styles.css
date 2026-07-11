@@ -99,11 +99,11 @@ select { min-width: 108px; padding: 0 30px 0 10px; }
 .ratio-16-9 { --ratio: 1.7777778; }
 .ratio-4-3 { --ratio: 1.3333333; }
 .broadcastCenter { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-.broadcastStatus { padding: clamp(5px, .8vmin, 9px) clamp(10px, 1.5vmin, 18px); border: 1px solid #555a56; color: #c1c6c2; font-size: clamp(14px, 2vmin, 26px); font-weight: 700; }
-.broadcastTime { margin: clamp(28px, 5vmin, 54px) 0 clamp(18px, 3vmin, 34px); font: 700 clamp(110px, 22vmin, 300px)/.86 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.ratio-4-3 .broadcastTime { font-size: clamp(100px, 20vmin, 260px); }
-.broadcastMeta { margin: 0 0 clamp(22px, 4vmin, 44px); color: #aab0ab; font: clamp(16px, 2.4vmin, 32px)/1.4 ui-monospace, Consolas, monospace; }
-.broadcastCanvas .progress { width: min(100%, 1080px); height: clamp(9px, 1.5vmin, 20px); }
+.broadcastStatus { color: #c1c6c2; font-size: clamp(13px, 2vmin, 24px); font-weight: 700; }
+.broadcastTime { margin: clamp(24px, 4.5vmin, 48px) 0 clamp(14px, 2.5vmin, 28px); font: 700 clamp(118px, 32vmin, 300px)/.82 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ratio-4-3 .broadcastTime { font-size: clamp(118px, 29vmin, 270px); }
+.broadcastMeta { margin: 0 0 clamp(24px, 5vmin, 50px); color: #aab0ab; font: clamp(13px, 2.2vmin, 28px)/1.4 ui-monospace, Consolas, monospace; }
+.broadcastCanvas .progress { width: min(96%, 1080px); height: clamp(8px, 1.3vmin, 16px); }
 .bellNotice { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 20px; background: rgba(4, 6, 5, .94); color: #fff; font-size: clamp(64px, 14vmin, 180px); font-weight: 800; }
 .bellNotice svg { width: 1em; height: 1em; }
 
