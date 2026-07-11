@@ -163,6 +163,8 @@ export function App() {
   const elapsedMilliseconds = elapsedMs(runtime, now);
   const remainingMilliseconds = displayDuration * 1000 - elapsedMilliseconds;
   const remainingSeconds = Math.max(0, Math.ceil(remainingMilliseconds / 1000));
+  const overtimeSeconds = Math.max(0, Math.floor(-remainingMilliseconds / 1000));
+  const formattedRemaining = remainingMilliseconds < 0 ? `+${formatTime(overtimeSeconds)}` : formatTime(remainingSeconds);
   const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
   const progress = displayDuration ? Math.min(1, elapsedMilliseconds / (displayDuration * 1000)) : 0;
   const tone = remainingMilliseconds <= 0 ? "overtime" : remainingSeconds <= 60 ? "warning" : remainingSeconds <= 120 ? "caution" : "normal";
@@ -199,12 +201,6 @@ export function App() {
     window.setTimeout(() => setBellNotice(null), 1600);
     commit((previous) => ({ ...previous, runtime: { ...previous.runtime, firedBellIds: [...previous.runtime.firedBellIds, ...due.map((bell) => bell.id)] } }));
   }, [broadcastConnected, commit, isBroadcast, remainingMilliseconds, runtime.activeBells, runtime.firedBellIds, runtime.status, settings.muted, settings.volume]);
-
-  useEffect(() => {
-    if (!isBroadcast && runtime.status === "running" && remainingMilliseconds <= 0) {
-      commit((previous) => ({ ...previous, runtime: { ...previous.runtime, status: "finished", startedAt: null, elapsedBeforeStartMs: previous.runtime.activeDurationSeconds * 1000 } }));
-    }
-  }, [commit, isBroadcast, remainingMilliseconds, runtime.status]);
 
   const updateSettings = (patch: Partial<Settings>) => commit((previous) => ({ ...previous, settings: { ...previous.settings, ...patch } }));
   const updateDuration = (minutes: number, seconds: number) => updateSettings({ durationSeconds: Math.max(1, minutes * 60 + seconds) });
@@ -295,7 +291,7 @@ export function App() {
   if (isBroadcast) return <main className="broadcastShell"><section className={`broadcastCanvas ratio-${settings.aspectRatio.replace(":", "-")} ${tone}`}>
     <div className="broadcastCenter">
       <span className="broadcastStatus">{statusLabel}</span>
-      <div className="broadcastTime">{formatTime(remainingSeconds)}</div>
+      <div className="broadcastTime">{formattedRemaining}</div>
       <p className="broadcastMeta">経過 {formatTime(elapsedSeconds)} / 全体 {formatTime(displayDuration)}</p>
       <ProgressBar />
     </div>
@@ -323,7 +319,7 @@ export function App() {
       <button className="primary" onClick={openBroadcastWindow}><Maximize2 />配信用画面</button>
     </div></header>
     <section className="workspace">
-      <div className="panel timerPanel"><div className={`miniBroadcast ${tone}`}><span>{statusLabel}</span><strong>{formatTime(remainingSeconds)}</strong><p>経過 {formatTime(elapsedSeconds)} / 全体 {formatTime(displayDuration)}</p><ProgressBar /></div>
+      <div className="panel timerPanel"><div className={`miniBroadcast ${tone}`}><span>{statusLabel}</span><strong>{formattedRemaining}</strong><p>経過 {formatTime(elapsedSeconds)} / 全体 {formatTime(displayDuration)}</p><ProgressBar /></div>
         <div className="controls"><button onClick={startOrPause} disabled={hasInvalidBell} className={`controlButton primaryControl ${runtime.status === "running" ? "pauseControl" : ""}`}>{runtime.status === "running" ? <Pause /> : <Play />}<span>{runtime.status === "running" ? "一時停止" : "開始"}</span></button><button onClick={reset} className="controlButton secondary"><RotateCcw />リセット</button><button onClick={() => playBell(settings.volume, 1)} className="iconButton" title="鈴を試聴"><Bell /></button></div>
       </div>
       <aside className="settingsColumn">
