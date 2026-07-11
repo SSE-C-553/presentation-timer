@@ -342,6 +342,7 @@ export function App() {
         「オノマトペ チーン04-2（短）」
         (<a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noreferrer">CC BY 4.0</a>)
       </p>
+      <p className="authorCredit">作者: <a href="https://x.com/SSEC553" target="_blank" rel="noreferrer">SSEC553</a></p>
     </section>
   </main>;
 }
