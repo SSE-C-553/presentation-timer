@@ -8,20 +8,19 @@ type Settings = { durationSeconds: number; aspectRatio: AspectRatio; bells: Bell
 type Runtime = { status: Status; startedAt: number | null; elapsedBeforeStartMs: number; activeDurationSeconds: number; activeBells: BellEvent[]; firedBellIds: string[] };
 type TimerState = { settings: Settings; runtime: Runtime; revision: number; updatedAt: number };
 
-const STORAGE_KEY = "lt-timer-state-v3";
-const OLD_STORAGE_KEY = "lt-timer-state-v2";
+const STORAGE_KEY = "presentation-timer-state-v1";
 const CHANNEL_NAME = "lt-timer-sync";
 const BELL_AUDIO_SRC = "./audio/otologic-onoma-ding04-short.mp3";
 
 const defaultBells = (): BellEvent[] => [
-  { id: crypto.randomUUID(), triggerRemainingSeconds: 120, strikeCount: 1, enabled: true },
-  { id: crypto.randomUUID(), triggerRemainingSeconds: 60, strikeCount: 2, enabled: true },
+  { id: crypto.randomUUID(), triggerRemainingSeconds: 300, strikeCount: 1, enabled: true },
+  { id: crypto.randomUUID(), triggerRemainingSeconds: 180, strikeCount: 2, enabled: true },
   { id: crypto.randomUUID(), triggerRemainingSeconds: 0, strikeCount: 3, enabled: true },
 ];
 
 const initialState = (): TimerState => ({
-  settings: { durationSeconds: 300, aspectRatio: "16:9", bells: defaultBells(), volume: 0.8, muted: false },
-  runtime: { status: "idle", startedAt: null, elapsedBeforeStartMs: 0, activeDurationSeconds: 300, activeBells: [], firedBellIds: [] },
+  settings: { durationSeconds: 600, aspectRatio: "16:9", bells: defaultBells(), volume: 0.8, muted: false },
+  runtime: { status: "idle", startedAt: null, elapsedBeforeStartMs: 0, activeDurationSeconds: 600, activeBells: [], firedBellIds: [] },
   revision: 0,
   updatedAt: Date.now(),
 });
@@ -31,17 +30,7 @@ function loadState(): TimerState {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) return { ...fallback, ...JSON.parse(saved) };
-    const old = localStorage.getItem(OLD_STORAGE_KEY);
-    if (!old) return fallback;
-    const parsed = JSON.parse(old);
-    const duration = Number(parsed.durationSeconds) || 300;
-    const bells: BellEvent[] = Array.isArray(parsed.bells) ? parsed.bells.map((bell: { id?: string; triggerAtSeconds?: number; strikeCount?: number; enabled?: boolean }) => ({
-      id: bell.id || crypto.randomUUID(),
-      triggerRemainingSeconds: Math.max(0, duration - Number(bell.triggerAtSeconds || 0)),
-      strikeCount: Number(bell.strikeCount) || 1,
-      enabled: bell.enabled !== false,
-    })) : defaultBells();
-    return { ...fallback, settings: { ...fallback.settings, durationSeconds: duration, aspectRatio: parsed.aspectRatio === "16:9" ? "16:9" : "4:3", bells, muted: Boolean(parsed.muted) } };
+    return fallback;
   } catch { return fallback; }
 }
 
