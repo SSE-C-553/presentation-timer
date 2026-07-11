@@ -106,6 +106,8 @@ select { min-width: 108px; padding: 0 30px 0 10px; }
 .broadcastCanvas .progress { width: min(96%, 1080px); height: clamp(8px, 1.3vmin, 16px); margin-top: clamp(24px, 5vmin, 52px); }
 .bellNotice { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 20px; background: rgba(4, 6, 5, .94); color: #fff; font-size: clamp(64px, 14vmin, 180px); font-weight: 800; }
 .bellNotice svg { width: 1em; height: 1em; }
+.audioEnableButton { position: absolute; top: clamp(16px, 3vmin, 32px); right: clamp(16px, 3vmin, 32px); min-height: 42px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid #707670; border-radius: 2px; background: #202421; color: #f2f4f1; font-size: 13px; font-weight: 700; }
+.audioEnableButton svg { width: 18px; height: 18px; }
 
 @media (max-width: 1050px) {
   .workspace { grid-template-columns: 1fr; }

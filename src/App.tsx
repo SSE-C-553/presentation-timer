@@ -104,6 +104,7 @@ export function App() {
   const [now, setNow] = useState(Date.now());
   const [bellNotice, setBellNotice] = useState<string | null>(null);
   const [broadcastConnected, setBroadcastConnected] = useState(false);
+  const [broadcastAudioReady, setBroadcastAudioReady] = useState(false);
   const channelRef = useRef<BroadcastChannel | null>(null);
   const broadcastWindowRef = useRef<Window | null>(null);
   const stateRef = useRef(state);
@@ -138,8 +139,12 @@ export function App() {
     if (isBroadcast) {
       channel.postMessage({ type: "request" });
       channel.postMessage({ type: "broadcast-ready" });
-      void getAudioContext();
-      void loadAudio();
+      void getAudioContext()
+        .then((context) => {
+          setBroadcastAudioReady(context.state === "running");
+          return loadAudio();
+        })
+        .catch(() => setBroadcastAudioReady(false));
     }
     const onStorage = (event: StorageEvent) => { if (event.key === STORAGE_KEY && event.newValue) setState(JSON.parse(event.newValue)); };
     window.addEventListener("storage", onStorage);
@@ -281,6 +286,12 @@ export function App() {
     };
   }, [isBroadcast, settings.aspectRatio]);
 
+  const enableBroadcastAudio = async () => {
+    const context = await getAudioContext();
+    await loadAudio();
+    setBroadcastAudioReady(context.state === "running");
+  };
+
   if (isBroadcast) return <main className="broadcastShell"><section className={`broadcastCanvas ratio-${settings.aspectRatio.replace(":", "-")} ${tone}`}>
     <div className="broadcastCenter">
       <span className="broadcastStatus">{statusLabel}</span>
@@ -288,6 +299,7 @@ export function App() {
       <p className="broadcastMeta">経過 {formatTime(elapsedSeconds)} / 全体 {formatTime(displayDuration)}</p>
       <ProgressBar />
     </div>
+    {!broadcastAudioReady && <button className="audioEnableButton" onClick={() => void enableBroadcastAudio()}><Volume2 />音声を有効にする</button>}
     {bellNotice && <div className="bellNotice"><Bell />{bellNotice}</div>}
   </section></main>;
 
