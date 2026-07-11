@@ -1,0 +1,145 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Yu Gothic UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  color: #1f211f;
+  background: #e8e7e2;
+  font-synthesis: none;
+  --paper: #f7f6f1;
+  --ink: #1f211f;
+  --muted: #6d706b;
+  --rule: #bbbcb5;
+  --red: #c63f2e;
+  --ochre: #bb8a2c;
+  --teal: #167d78;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; overflow-x: hidden; background: #e8e7e2; }
+button, input, select { font: inherit; }
+button { border: 0; color: inherit; cursor: pointer; }
+button:disabled, input:disabled, select:disabled { cursor: not-allowed; opacity: .48; }
+.app { min-height: 100vh; padding: 0 34px 42px; background: #e8e7e2; }
+
+.appHeader { max-width: 1420px; min-height: 78px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 2px solid var(--ink); }
+.appHeader h1 { margin: 0; font: 800 22px/1 ui-monospace, Consolas, monospace; letter-spacing: 0; }
+.appHeader p { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+.headerActions, .controls, .segments, .timeInputs { display: flex; align-items: center; gap: 8px; }
+.primary, .controlButton, .iconButton, .segments button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 2px; }
+.primary { min-height: 42px; padding: 0 16px; border: 1px solid var(--ink); background: var(--paper); font-size: 13px; font-weight: 700; box-shadow: 3px 3px 0 var(--ink); }
+.primary:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.iconButton { width: 40px; height: 40px; padding: 0; border: 1px solid #83857f; background: transparent; }
+.iconButton:hover { background: #deddd7; }
+.iconButton svg, .controlButton svg, .primary svg { width: 19px; height: 19px; flex: none; }
+
+.workspace { max-width: 1420px; margin: 28px auto 0; display: grid; grid-template-columns: minmax(430px, .9fr) minmax(580px, 1.1fr); gap: 30px; align-items: start; }
+.workspace > *, .settingsColumn, .panel, .bellItem > * { min-width: 0; }
+.settingsColumn { padding: 0 24px 24px; display: grid; gap: 30px; background: var(--paper); border-top: 5px solid var(--ink); box-shadow: 0 2px 10px rgba(32, 34, 31, .08); }
+.panel { background: transparent; }
+.timerPanel { position: sticky; top: 18px; padding: 12px; border: 1px solid #30322f; background: #202321; box-shadow: 7px 7px 0 #b8b7b1; }
+.settingsPanel, .bellPanel { padding: 0; }
+
+.miniBroadcast { min-height: 360px; padding: 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 1px solid #4b4e4b; background: #090b0a; }
+.miniBroadcast > span { color: #b6bbb7; font-size: 12px; font-weight: 700; }
+.miniBroadcast strong { margin: 24px 0 14px; font: 700 clamp(72px, 9vw, 130px)/.9 ui-monospace, Consolas, monospace; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.miniBroadcast p { margin: 0 0 26px; color: #989e99; font: 13px/1.4 ui-monospace, Consolas, monospace; }
+.progress { position: relative; width: 100%; height: 8px; background: #343835; }
+.progressFill { height: 100%; background: #47b9b2; transition: width .15s linear; }
+.caution .progressFill { background: #d4a844; }
+.warning .progressFill, .overtime .progressFill { background: #e05a4c; }
+.bellMarker { position: absolute; top: -5px; width: 2px; height: 18px; transform: translateX(-1px); background: #f5f2e8; box-shadow: 0 0 0 1px rgba(0, 0, 0, .55); z-index: 2; }
+.normal .broadcastTime, .normal.miniBroadcast strong { color: #f4f5f2; }
+.caution .broadcastTime, .caution.miniBroadcast strong { color: #e0b64f; }
+.warning .broadcastTime, .warning.miniBroadcast strong, .overtime .broadcastTime, .overtime.miniBroadcast strong { color: #e7695d; }
+
+.controls { margin-top: 12px; }
+.controlButton { height: 49px; padding: 0 18px; border: 1px solid #747873; background: transparent; color: #f0f1ee; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.primaryControl { width: 158px; border-color: var(--red); background: var(--red); color: white; }
+.primaryControl.pauseControl { border-color: var(--ochre); background: var(--ochre); color: #19150d; }
+.secondary { width: 136px; }
+.timerPanel .iconButton { border-color: #747873; color: #f0f1ee; }
+.timerPanel .iconButton:hover { background: #353936; }
+
+.panelTitle { min-height: 68px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 11px; border-bottom: 2px solid var(--ink); }
+.panelTitle h2, .usageGuide h2 { margin: 0; font-size: 17px; font-weight: 800; }
+.panelTitle p, .usageGuide > div > p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+.settingRow { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--rule); font-size: 13px; }
+.timeInputs label { display: flex; align-items: center; gap: 6px; color: #555954; font-size: 13px; }
+input[type="number"], select { height: 43px; border: 1px solid #777a74; border-radius: 0; outline: none; background: #fff; color: var(--ink); font-size: 17px; }
+input[type="number"] { width: 82px; padding: 0 9px; text-align: right; font-family: ui-monospace, Consolas, monospace; font-weight: 700; font-variant-numeric: tabular-nums; }
+input:focus, select:focus { border: 2px solid var(--teal); }
+select { min-width: 108px; padding: 0 30px 0 10px; }
+.segments { border: 1px solid #777a74; background: #fff; }
+.segments button { width: 66px; height: 36px; background: transparent; color: var(--muted); font: 700 13px/1 ui-monospace, Consolas, monospace; }
+.segments button.active { background: var(--ink); color: #fff; }
+.volumeSlider { width: min(250px, 50vw); accent-color: var(--red); }
+
+.bellList { display: grid; }
+.bellItem { min-height: 68px; display: grid; grid-template-columns: 82px minmax(205px, 1fr) 118px 38px 38px; align-items: center; gap: 10px; border-bottom: 1px solid var(--rule); }
+.bellItem.invalid { margin: 0 -8px; padding: 0 8px; outline: 2px solid var(--red); }
+.enableBell { display: flex; align-items: center; gap: 8px; }
+.enableBell input { width: 16px; height: 16px; accent-color: var(--red); }
+.enableBell strong { font: 700 14px/1 ui-monospace, Consolas, monospace; }
+.strikeCount { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
+.strikeCount select { width: 72px; min-width: 72px; padding-left: 8px; padding-right: 22px; font-size: 14px; }
+.iconButton.small { width: 36px; height: 36px; }
+.danger { color: var(--red); }
+.errorMessage { margin: 12px 0 4px; color: var(--red); font-size: 12px; font-weight: 700; }
+
+.usageGuide { max-width: 1420px; margin: 34px auto 0; padding: 22px 24px 18px; border-top: 5px solid var(--ink); background: var(--paper); }
+.usageGuide ol { margin: 18px 0 0; padding: 0; display: flex; list-style: none; counter-reset: usage; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.usageGuide li { position: relative; flex: 1; min-height: 105px; padding: 16px 22px 14px 0; counter-increment: usage; }
+.usageGuide li:not(:last-child)::after { content: "→"; position: absolute; top: 20px; right: 8px; color: var(--red); font-weight: 800; }
+.usageGuide li::before { content: counter(usage) "."; display: block; margin-bottom: 7px; color: var(--red); font: 800 13px/1 ui-monospace, Consolas, monospace; }
+.usageGuide li strong { display: block; font-size: 13px; }
+.usageGuide li span { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.audioCredit { margin: 11px 0 0; color: #7c7f79; font-size: 11px; }
+.audioCredit a { color: inherit; text-underline-offset: 2px; }
+
+.broadcastShell { width: 100vw; height: 100vh; height: 100dvh; display: grid; place-items: center; overflow: hidden; background: #020304; }
+.broadcastCanvas { position: relative; width: min(100vw, calc(100vh * var(--ratio))); height: min(100vh, calc(100vw / var(--ratio))); padding: clamp(20px, 4vmin, 60px); display: grid; grid-template-rows: auto 1fr; overflow: hidden; background: #070907; }
+.ratio-16-9 { --ratio: 1.7777778; }
+.ratio-4-3 { --ratio: 1.3333333; }
+.broadcastCanvas header { display: flex; justify-content: space-between; gap: 20px; color: #b5bab6; font: 600 clamp(16px, 2.5vmin, 34px)/1 ui-monospace, Consolas, monospace; }
+.broadcastCenter { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.remainingLabel, .elapsed { margin: 0; color: #b5bab6; font-size: clamp(18px, 2.8vmin, 38px); }
+.broadcastTime { margin: clamp(14px, 3vmin, 36px) 0; font: 700 clamp(78px, 20vmin, 270px)/.9 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ratio-4-3 .broadcastTime { font-size: clamp(70px, 17vmin, 210px); }
+.broadcastCanvas .progress { width: min(82%, 980px); height: clamp(8px, 1.4vmin, 18px); margin-bottom: clamp(16px, 3vmin, 32px); }
+.bellNotice { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 20px; background: rgba(4, 6, 5, .94); color: #fff; font-size: clamp(64px, 14vmin, 180px); font-weight: 800; }
+.bellNotice svg { width: 1em; height: 1em; }
+
+@media (max-width: 1050px) {
+  .workspace { grid-template-columns: 1fr; }
+  .timerPanel { position: static; }
+  .usageGuide ol { display: grid; grid-template-columns: 1fr 1fr; }
+  .usageGuide li:not(:last-child)::after { content: none; }
+}
+
+@media (max-width: 900px) and (min-width: 651px) {
+  .bellItem { grid-template-columns: 82px minmax(210px, 1fr) 118px 38px 38px; padding: 10px 0; }
+  .bellItem .timeInputs { grid-column: 2 / 4; }
+  .strikeCount { grid-column: 2; grid-row: 2; }
+}
+
+@media (max-width: 650px) {
+  .app { padding: 0 max(14px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
+  .appHeader { padding: 14px 0; align-items: flex-start; flex-direction: column; }
+  .headerActions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+  .workspace { margin-top: 14px; gap: 18px; }
+  .settingsColumn { padding: 0 14px 18px; }
+  .miniBroadcast { min-height: 280px; padding: 20px; }
+  .miniBroadcast strong { font-size: clamp(62px, 20vw, 92px); }
+  .settingRow { align-items: flex-start; flex-direction: column; padding: 13px 0; }
+  .bellItem { padding: 12px 0; grid-template-columns: 1fr 36px 36px; gap: 10px; }
+  .enableBell { grid-column: 1; }
+  .bellItem .timeInputs { grid-column: 1 / 4; grid-row: 2; flex-wrap: wrap; }
+  .strikeCount { grid-column: 1; grid-row: 3; }
+  .bellItem > .iconButton:not(.danger) { grid-column: 2; grid-row: 1; }
+  .bellItem > .danger { grid-column: 3; grid-row: 1; }
+  .bellItem .iconButton.small { width: 44px; height: 44px; }
+  .bellItem { grid-template-columns: 1fr 44px 44px; }
+  .controls { flex-wrap: wrap; }
+  .primaryControl, .secondary { flex: 1; }
+  .usageGuide { padding: 18px 14px; }
+  .usageGuide ol { grid-template-columns: 1fr; }
+  .usageGuide li { min-height: 0; }
+}
